@@ -1,0 +1,94 @@
+# def guardar_cliente(conn, cursor, nombre, email, telefono, historial, ultima_interaccion, tipo_cliente):
+    """
+    Guarda un nuevo cliente en la tabla Clientes.
+    """
+    cursor.execute("""
+        INSERT INTO Clientes (Nombre, Email, Telefono, Historial_Compras, Ultima_Interaccion, Tipo_Cliente)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (nombre, email, telefono, historial, ultima_interaccion, tipo_cliente))
+    conn.commit()
+# def guardar_cliente(conn, cursor, nombre, email, telefono, historial, ultima_interaccion, tipo_cliente):
+    """
+    Guarda un cliente en la base de datos.
+    """
+    try:
+        # Aquí iría la lógica de guardar en la base de datos
+        consulta = """
+        INSERT INTO clientes (nombre, email, telefono, historial, ultima_interaccion, tipo_cliente)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """
+        cursor.execute(consulta, (nombre, email, telefono, historial, ultima_interaccion, tipo_cliente))
+        conn.commit()
+        print(f"Cliente {nombre} guardado exitosamente.")
+    except Exception as e:
+        print(f"Error al guardar cliente: {e}")
+
+#la original
+def guardar_cliente(conn, cursor, nombre, email, telefono, historial, ultima_interaccion, tipo_cliente):
+    """
+    Guarda un nuevo cliente en la tabla Clientes.
+    """
+    try:
+        # Consulta con los nombres originales de la tabla y columnas
+        consulta = """
+        INSERT INTO Clientes (Nombre, Email, Telefono, Historial_Compras, Ultima_Interaccion, Tipo_Cliente)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """
+        cursor.execute(consulta, (nombre, email, telefono, historial, ultima_interaccion, tipo_cliente))
+        conn.commit()
+        print(f"Cliente '{nombre}' guardado exitosamente.")
+    except Exception as e:
+        print(f"Error al guardar cliente: {e}")
+
+        --
+
+        def obtener_ultima_interaccion(cursor, cliente_id):
+    """
+    Obtiene la última interacción del cliente.
+    Si no hay interacciones, devuelve None o un mensaje adecuado.
+    """
+    cursor.execute("""
+    SELECT Fecha
+    FROM Interacciones
+    WHERE Cliente_ID = ?
+    ORDER BY Fecha DESC
+    LIMIT 1
+    """, (cliente_id,))
+    
+    ultima_interaccion = cursor.fetchone()
+    
+    if ultima_interaccion is None:
+        return "El cliente no ha tenido interacciones aún."
+    else:
+        return ultima_interaccion[0]  # Devuelve la fecha de la última interacción
+
+def mostrar_informacion_cliente(cursor, cliente_id):
+    """
+    Muestra la información básica del cliente junto con la última interacción.
+    """
+    cursor.execute("SELECT Nombre, Email, Telefono, Tipo_Cliente FROM Clientes WHERE ID = ?", (cliente_id,))
+    cliente = cursor.fetchone()
+    
+    if cliente:
+        nombre, email, telefono, tipo_cliente = cliente
+        ultima_interaccion = obtener_ultima_interaccion(cursor, cliente_id)
+        
+        print(f"Cliente: {nombre}")
+        print(f"Email: {email}")
+        print(f"Teléfono: {telefono}")
+        print(f"Tipo de Cliente: {tipo_cliente}")
+        print(f"Última Interacción: {ultima_interaccion}")
+    else:
+        print(f"Cliente con ID {cliente_id} no encontrado.")
+
+
+--
+def guardar_producto(conn, cursor, nombre_producto, precio):
+    """
+    Guarda un nuevo producto en la tabla Productos.
+    """
+    cursor.execute("""
+        INSERT INTO Productos (Nombre, Precio)
+        VALUES (?, ?)
+    """, (nombre_producto, precio))
+    conn.commit()

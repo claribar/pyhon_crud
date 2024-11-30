@@ -1,0 +1,41 @@
+{
+  "cliente_id": 1234,
+  "compras": [
+    {
+      "fecha": "2024-10-15",
+      "producto": "Laptop XYZ",
+      "cantidad": 1,
+      "precio_unitario": 1000,
+      "total": 1000,
+      "metodo_pago": "Tarjeta de crédito"
+    },
+    {
+      "fecha": "2024-11-02",
+      "producto": "Auriculares ABC",
+      "cantidad": 2,
+      "precio_unitario": 50,
+      "total": 100,
+      "metodo_pago": "Efectivo"
+    }
+  ],
+  "interacciones": [
+    {
+      "id": 1,
+      "fecha": "2024-10-14",
+      "tipo": "comentario",
+      "detalles": "Pregunta sobre la garantía del producto."
+    },
+    {
+      "id": 2,
+      "fecha": "2024-10-16",
+      "tipo": "compra",
+      "detalles": "Compra confirmada de Laptop XYZ."
+    },
+    {
+      "id": 3,
+      "fecha": "2024-11-02",
+      "tipo": "soporte",
+      "detalles": "Consulta sobre la devolución de auriculares defectuosos."
+    }
+  ]
+}

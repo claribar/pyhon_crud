@@ -1,0 +1,210 @@
+# def agregar_formulario_clientes(tab_clientes, conn, cursor):
+    """
+    Configura el formulario para la gestión de clientes.
+    """
+    Label(tab_clientes, text="Nombre:").grid(row=0, column=0, padx=10, pady=10)
+    nombre_var = StringVar()
+    Entry(tab_clientes, textvariable=nombre_var).grid(row=0, column=1, padx=10, pady=10)
+
+    Label(tab_clientes, text="Email:").grid(row=1, column=0, padx=10, pady=10)
+    email_var = StringVar()
+    Entry(tab_clientes, textvariable=email_var).grid(row=1, column=1, padx=10, pady=10)
+
+    Label(tab_clientes, text="Teléfono:").grid(row=2, column=0, padx=10, pady=10)
+    telefono_var = StringVar()
+    Entry(tab_clientes, textvariable=telefono_var).grid(row=2, column=1, padx=10, pady=10)
+
+    # Agregar campos para historial, última interacción y tipo de cliente
+    Label(tab_clientes, text="Historial:").grid(row=3, column=0, padx=10, pady=10)
+    historial_var = StringVar()
+    Entry(tab_clientes, textvariable=historial_var).grid(row=3, column=1, padx=10, pady=10)
+
+    Label(tab_clientes, text="Última Interacción:").grid(row=4, column=0, padx=10, pady=10)
+    ultima_interaccion_var = StringVar()
+    Entry(tab_clientes, textvariable=ultima_interaccion_var).grid(row=4, column=1, padx=10, pady=10)
+
+    Label(tab_clientes, text="Tipo de Cliente:").grid(row=5, column=0, padx=10, pady=10)
+    tipo_cliente_var = StringVar()
+    Entry(tab_clientes, textvariable=tipo_cliente_var).grid(row=5, column=1, padx=10, pady=10)
+
+    # Modificar el botón para incluir los valores adicionales
+    Button(tab_clientes, text="Guardar Cliente", command=lambda: guardar_cliente(
+        conn, cursor, 
+        nombre_var.get(), 
+        email_var.get(), 
+        telefono_var.get(), 
+        historial_var.get(), 
+        ultima_interaccion_var.get(), 
+        tipo_cliente_var.get()
+    )).grid(row=6, column=0, columnspan=2, pady=10)
+# def agregar_formulario_clientes(tab_clientes, conn, cursor):
+
+
+---
+
+from tkinter import Label, Entry, Button, StringVar, ttk
+from database.db_manager import guardar_cliente, guardar_interaccion, guardar_producto
+
+def inicializar_gui(root, conn, cursor):
+    """
+    Configura y construye la interfaz gráfica del CRM con pestañas.
+    """
+    # Crear el control de pestañas
+    tab_control = ttk.Notebook(root)
+    tab_clientes = ttk.Frame(tab_control)
+    tab_interacciones = ttk.Frame(tab_control)
+    tab_productos = ttk.Frame(tab_control)
+
+    tab_control.add(tab_clientes, text="Clientes")
+    tab_control.add(tab_interacciones, text="Interacciones")
+    tab_control.add(tab_productos, text="Productos")
+    tab_control.pack(expand=1, fill="both")
+
+    # Configurar cada pestaña
+    agregar_formulario_clientes(tab_clientes, conn, cursor)
+    agregar_formulario_interacciones(tab_interacciones, conn, cursor)
+    agregar_formulario_productos(tab_productos, conn, cursor)
+
+
+    """
+    Configura el formulario para la gestión de clientes.
+    """
+    Label(tab_clientes, text="Nombre:").grid(row=0, column=0, padx=10, pady=10)
+    nombre_var = StringVar()
+    Entry(tab_clientes, textvariable=nombre_var).grid(row=0, column=1, padx=10, pady=10)
+
+    Label(tab_clientes, text="Email:").grid(row=1, column=0, padx=10, pady=10)
+    email_var = StringVar()
+    Entry(tab_clientes, textvariable=email_var).grid(row=1, column=1, padx=10, pady=10)
+
+    Label(tab_clientes, text="Teléfono:").grid(row=2, column=0, padx=10, pady=10)
+    telefono_var = StringVar()
+    Entry(tab_clientes, textvariable=telefono_var).grid(row=2, column=1, padx=10, pady=10)
+
+    # Modificar el botón para no incluir los tres campos
+    #Button(tab_clientes, text="Guardar Cliente", command=lambda: guardar_cliente(
+        conn, cursor, 
+        nombre_var.get(), 
+        email_var.get(), 
+        telefono_var.get()
+    )).grid(row=3, column=0, columnspan=2, pady=10)
+
+     # Botón de guardar cliente bien alineado
+    guardar_btn = Button(
+        tab_clientes,
+        text="Guardar Cliente",
+        command=lambda: guardar_cliente(
+            conn, cursor,
+            nombre_var.get(),
+            email_var.get(),
+            telefono_var.get()
+        )
+    )
+    guardar_btn.grid(row=3, column=0, columnspan=2, padx=10, pady=20, sticky="nsew")
+
+    # Configuración opcional para expandir el diseño si es necesario
+    tab_clientes.grid_columnconfigure(0, weight=1)
+    tab_clientes.grid_columnconfigure(1, weight=1)
+
+def agregar_formulario_clientes(tab_clientes, conn, cursor):
+    """
+    Configura el formulario para la gestión de clientes.
+    """
+    # Configuración de campos según la tabla Clientes
+    campos = [
+        ("Nombre", "nombre_var"),
+        ("Email", "email_var"),
+        ("Teléfono", "telefono_var"),
+        ("Historial de Compras", "historial_var"),
+        ("Última Interacción", "ultima_interaccion_var"),
+        ("Tipo de Cliente", "tipo_cliente_var"),
+    ]
+
+    # Crear diccionario para las variables
+    variables = {}
+
+    # Generar dinámicamente los campos del formulario
+    for i, (etiqueta, var_nombre) in enumerate(campos):
+        Label(tab_clientes, text=f"{etiqueta}:").grid(row=i, column=0, padx=10, pady=5, sticky="w")
+        variables[var_nombre] = StringVar()
+        Entry(tab_clientes, textvariable=variables[var_nombre]).grid(row=i, column=1, padx=10, pady=5, sticky="ew")
+
+    # Botón de guardar cliente
+    Button(
+        tab_clientes,
+        text="Guardar Cliente",
+        command=lambda: guardar_cliente(
+            conn, cursor,
+            variables["nombre_var"].get(),
+            variables["email_var"].get(),
+            variables["telefono_var"].get(),
+            variables["historial_var"].get(),
+            variables["ultima_interaccion_var"].get(),
+            variables["tipo_cliente_var"].get(),
+        )
+    ).grid(row=len(campos), column=0, columnspan=2, padx=10, pady=20, sticky="nsew")
+
+
+def agregar_formulario_interacciones(tab_interacciones, conn, cursor):
+    """
+    Configura el formulario para la gestión de interacciones.
+    """
+    Label(tab_interacciones, text="ID Cliente:").grid(row=0, column=0, padx=10, pady=10)
+    cliente_id_var = StringVar()
+    Entry(tab_interacciones, textvariable=cliente_id_var).grid(row=0, column=1, padx=10, pady=10)
+
+    Label(tab_interacciones, text="Fecha:").grid(row=1, column=0, padx=10, pady=10)
+    fecha_var = StringVar()
+    Entry(tab_interacciones, textvariable=fecha_var).grid(row=1, column=1, padx=10, pady=10)
+
+    Label(tab_interacciones, text="Tipo:").grid(row=2, column=0, padx=10, pady=10)
+    tipo_var = StringVar()
+    Entry(tab_interacciones, textvariable=tipo_var).grid(row=2, column=1, padx=10, pady=10)
+
+    Label(tab_interacciones, text="Detalles:").grid(row=3, column=0, padx=10, pady=10)
+    detalles_var = StringVar()
+    Entry(tab_interacciones, textvariable=detalles_var).grid(row=3, column=1, padx=10, pady=10)
+
+    Button(tab_interacciones, text="Guardar Interacción", command=lambda: guardar_interaccion(
+        conn, cursor, cliente_id_var.get(), fecha_var.get(), tipo_var.get(), detalles_var.get()
+    )).grid(row=4, column=0, columnspan=2, pady=10)
+
+def agregar_formulario_productos(tab_productos, conn, cursor):
+    """
+    Configura el formulario para la gestión de productos.
+    """
+    Label(tab_productos, text="ID Cliente:").grid(row=0, column=0, padx=10, pady=10)
+    cliente_id_var = StringVar()
+    Entry(tab_productos, textvariable=cliente_id_var).grid(row=0, column=1, padx=10, pady=10)
+
+    Label(tab_productos, text="Nombre del Producto:").grid(row=1, column=0, padx=10, pady=10)
+    producto_var = StringVar()
+    Entry(tab_productos, textvariable=producto_var).grid(row=1, column=1, padx=10, pady=10)
+
+    Label(tab_productos, text="Precio:").grid(row=2, column=0, padx=10, pady=10)
+    precio_var = StringVar()
+    Entry(tab_productos, textvariable=precio_var).grid(row=2, column=1, padx=10, pady=10)
+
+    Button(tab_productos, text="Guardar Producto", command=lambda: guardar_producto(
+        conn, cursor, cliente_id_var.get(), producto_var.get(), precio_var.get()
+    )).grid(row=3, column=0, columnspan=2, pady=10)
+
+
+--
+def mostrar_historial(conn, cursor, cliente_id):
+    """
+    Lógica para mostrar el historial de compras e interacciones de un cliente.
+    """
+    if cliente_id:
+        # Obtener historial de interacciones para el cliente
+        cursor.execute("""
+            SELECT fecha, tipo_interaccion, detalles
+            FROM interacciones
+            WHERE cliente_id = ?
+            ORDER BY fecha DESC
+        """, (cliente_id,))
+        historial = cursor.fetchall()
+
+        if historial:
+            for i, interaccion in enumerate(historial):
+                print(f"{i+1}. {interaccion[0]} - {interaccion[1]}: {interaccion[2]}")
